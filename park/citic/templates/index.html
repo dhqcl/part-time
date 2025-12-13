@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citic Park Manager</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; background-color: #f8f9fa; }
+        .card { box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; margin-bottom: 20px; }
+        .btn-action { margin-right: 5px; margin-bottom: 5px; }
+        pre { background-color: #f1f1f1; padding: 10px; border-radius: 5px; max-height: 300px; overflow-y: auto; }
+        .status-loading { color: #ffc107; }
+        .status-success { color: #198754; }
+        .status-error { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4 text-center">Citic Park Manager</h1>
+
+        <!-- Global Actions / Notifications -->
+        <div id="alertContainer"></div>
+
+        <div class="table-responsive">
+            <table class="table table-hover bg-white rounded shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Device Index</th>
+                        <th>VIP Info (Points)</th>
+                        <th>Actions</th>
+                        <th>Parking Query</th>
+                        <th>Data View</th>
+                    </tr>
+                </thead>
+                <tbody id="devicesTableBody">
+                    <!-- Rows will be injected here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal for displaying JSON results -->
+    <div class="modal fade" id="resultModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Result</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <pre id="modalContent"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDevices();
+        });
+
+        async function loadDevices() {
+            try {
+                const response = await fetch('/api/devices');
+                const data = await response.json();
+                const tbody = document.getElementById('devicesTableBody');
+                tbody.innerHTML = '';
+                
+                data.devices.forEach(index => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>Device ${index + 1}</td>
+                        <td>${index}</td>
+                        <td id="vip-info-${index}"><button class="btn btn-sm btn-outline-info" onclick="fetchInfo(${index}, 'points')">Load Info</button></td>
+                        <td>
+                            <button class="btn btn-sm btn-success btn-action" onclick="performAction(${index}, 'sign_in')">Sign In</button>
+                            <button class="btn btn-sm btn-warning btn-action" onclick="performAction(${index}, 'exchange')">Exchange Coupon</button>
+                            <button class="btn btn-sm btn-secondary btn-action" onclick="performAction(${index}, 'bonus')">Check Bonus</button>
+                        </td>
+                        <td>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" placeholder="Plate (e.g. 沪A12345)" id="plate-${index}">
+                                <button class="btn btn-primary" onclick="queryFee(${index})">Query</button>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-secondary btn-action" onclick="fetchInfo(${index}, 'park_records')">Parking Records</button>
+                            <button class="btn btn-sm btn-outline-secondary btn-action" onclick="fetchInfo(${index}, 'coupons')">Coupons</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                    // Proactively load basic info
+                    fetchInfo(index, 'points', false); 
+                });
+            } catch (error) {
+                showAlert('Failed to load devices: ' + error, 'danger');
+            }
+        }
+
+        async function performAction(index, action) {
+            try {
+                const response = await fetch(`/api/proxy/${action}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ device_index: index })
+                });
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showAlert(`Action ${action} successful!`, 'success');
+                    if (action === 'points') {
+                        // Special handling to update UI row if easy
+                        document.getElementById(`vip-info-${index}`).innerText = JSON.stringify(result).substring(0, 50) + '...';
+                    } else {
+                        showModal(result);
+                    }
+                } else {
+                    showAlert(`Error: ${result.error}`, 'danger');
+                }
+            } catch (error) {
+                showAlert('Network Error: ' + error, 'danger');
+            }
+        }
+
+        async function fetchInfo(index, action, showInModal = true) {
+            const cell = document.getElementById(`vip-info-${index}`);
+            if (!showInModal && cell) cell.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+            try {
+                const response = await fetch(`/api/proxy/${action}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ device_index: index })
+                });
+                const result = await response.json();
+                
+                if (showInModal) {
+                    showModal(result);
+                } else {
+                    // Try to extract readable info if action is points
+                    if (action === 'points' && result.Data) {
+                         // Adapting to likely structure, e.g. result.Data.Point
+                        cell.innerText = `Points: ${result.Data.Point || 'N/A'}`;
+                    } else {
+                         cell.innerText = 'Loaded';
+                    }
+                }
+            } catch (error) {
+                 if (!showInModal && cell) cell.innerText = 'Error';
+                 else showAlert('Network Error: ' + error, 'danger');
+            }
+        }
+
+        async function queryFee(index) {
+            const plate = document.getElementById(`plate-${index}`).value;
+            if (!plate) {
+                showAlert('Please enter a plate number', 'warning');
+                return;
+            }
+            try {
+                const response = await fetch(`/api/proxy/query_fee`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ device_index: index, plate: plate })
+                });
+                const result = await response.json();
+                showModal(result);
+            } catch (error) {
+                showAlert('Network Error: ' + error, 'danger');
+            }
+        }
+
+        function showModal(data) {
+            const modalBody = document.getElementById('modalContent');
+            modalBody.textContent = JSON.stringify(data, null, 2);
+            var resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+            resultModal.show();
+        }
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} alert-dismissible fade show`;
+            alert.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            container.appendChild(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+    </script>
+</body>
+</html>

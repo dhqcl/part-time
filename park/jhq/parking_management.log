@@ -1,0 +1,19 @@
+2025-12-12 23:38:32 - ERROR - JHQ query error: HTTPSConnectionPool(host='m.mallcoo.cn', port=443): Max retries exceeded with url: /api/park/ParkFee/GetParkFeeV3 (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1028)')))
+2025-12-12 23:38:43 - INFO - Plate: 沪ADH7824, Type: query_金虹桥, Info: {'入场时间': '', '停车时长': 0, '需要支付的费用': 0.0}
+2025-12-13 11:52:07 - INFO - Plate: 沪ABB6051, Type: query_金虹桥, Info: {'入场时间': '2025-12-13 10:12:54', '停车时长': 100, '需要支付的费用': 2000.0}
+2025-12-13 11:52:18 - INFO - Plate: 沪ABB6051, Type: query_金虹桥, Info: {'入场时间': '2025-12-13 10:12:54', '停车时长': 100, '需要支付的费用': 2000.0}
+2025-12-13 13:08:42 - INFO - Plate: 沪AE91552, Type: query_金虹桥, Info: {'入场时间': '2025-12-13 11:27:21', '停车时长': 102, '需要支付的费用': 2000.0}
+2025-12-13 13:08:49 - ERROR - JHQ discount error for plate 沪AE91552: HTTPConnectionPool(host='127.0.0.1', port=7890): Read timed out. (read timeout=5)
+2025-12-13 13:08:49 - INFO - JHQ discount applied for plate 沪AE91552: {"status":1,"message":"每人每车牌每次只能领取一张停车券！"}
+2025-12-13 13:08:50 - INFO - Plate: 沪AE91552, Type: discount_金虹桥, Info: {'折扣信息': '{"status":1,"message":"每人每车牌每次只能领取一张停车券！"}'}
+2025-12-13 13:08:54 - INFO - Plate: 沪AE91552, Type: query_金虹桥, Info: {'入场时间': '2025-12-13 11:27:21', '停车时长': 102, '需要支付的费用': 2000.0}
+2025-12-13 13:08:56 - INFO - Plate: 沪AE91552, Type: discount_金虹桥, Info: {'折扣信息': '待支付费用为0'}
+2025-12-13 13:08:59 - INFO - Plate: 沪AE91552, Type: query_金虹桥, Info: {'入场时间': '2025-12-13 11:27:21', '停车时长': 102, '需要支付的费用': 0.0}
+2025-12-13 13:10:52 - INFO - JHQ discount applied for plate 沪A12F32: {"code":0,"message":"折扣成功"}
+2025-12-13 13:10:54 - INFO - Plate: 沪A12F32, Type: discount_金虹桥, Info: {'折扣信息': '{"code":0,"message":"折扣成功"}'}
+2025-12-13 13:11:35 - INFO - Plate: 沪A12F32, Type: query_金虹桥, Info: {'入场时间': '2025-12-13 11:27:12', '停车时长': 104, '需要支付的费用': 0.0}
+2025-12-13 13:15:18 - INFO - Plate: 沪A51K34, Type: query_金虹桥, Info: {'入场时间': '2025-12-13 10:54:36', '停车时长': 141, '需要支付的费用': 2500.0}
+2025-12-13 13:15:36 - INFO - JHQ discount applied for plate 沪A51K34: {"code":0,"message":"折扣成功"}
+2025-12-13 13:15:37 - INFO - Plate: 沪A51K34, Type: discount_金虹桥, Info: {'折扣信息': '{"code":0,"message":"折扣成功"}'}
+2025-12-13 13:18:05 - INFO - Plate: 沪A51K34, Type: query_金虹桥, Info: {'入场时间': '2025-12-13 10:54:36', '停车时长': 141, '需要支付的费用': 500.0}
+2025-12-13 13:26:05 - INFO - Plate: 沪AAK8820, Type: query_金虹桥, Info: {'入场时间': '', '停车时长': 0, '需要支付的费用': 0.0}
