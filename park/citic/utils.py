@@ -76,6 +76,9 @@ def query_vip_info_office(token):
     response.raise_for_status()
     return response.json()
 
+
+
+
 def get_park_records(token, page_index=1, page_size=20):
     """
     Get parking payment records.
@@ -116,5 +119,18 @@ def sign_shangyuewan(token):
     headers = _get_headers(token, building_id=2)
     
     response = requests.get(url, headers=headers, verify=False)
+    response.raise_for_status()
+    return response.json()
+
+def query_vip_info(token):
+    """
+    Query VIP info (Async version).
+    Maps to query_vip_info.txt
+    """
+    url = f"{BASE_URL}/api/VipInfo/QueryVipInfoAsync"
+    headers = _get_headers(token, building_id=1)
+    
+    # Body is literal 'null', so we send None as json which requests handles as null
+    response = requests.post(url, headers=headers, json=None, verify=False)
     response.raise_for_status()
     return response.json()

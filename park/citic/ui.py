@@ -8,7 +8,7 @@ from PyQt5.QtCore import Qt
 # Import data and logic
 try:
     import devices
-    from devices import authorization_list
+    from devices import authorization_list, park_authorization_list
     import utils
     import importlib
 except ImportError:
@@ -16,7 +16,7 @@ except ImportError:
     import os
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
     import devices
-    from devices import authorization_list
+    from devices import authorization_list, park_authorization_list
     import utils
     import importlib
 
@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
     def load_devices(self):
         try:
             importlib.reload(devices)
-            from devices import authorization_list
+            from devices import authorization_list, park_authorization_list
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to reload devices: {e}")
             return
@@ -132,14 +132,21 @@ class MainWindow(QMainWindow):
             return raw.split("Bearer ")[1].strip()
         return raw
 
+    def get_park_token(self, index):
+        from devices import park_authorization_list
+        raw = park_authorization_list[index]
+        if raw.startswith("Bearer "):
+            return raw.split("Bearer ")[1].strip()
+        return raw
+
     def refresh_info(self, index):
         try:
             token = self.get_token(index)
-            data = utils.query_vip_info_office(token)
+            data = utils.query_vip_info(token)
             # Simplify display
             info_text = "Data Loaded"
-            if 'Data' in data and data['Data'] and 'Point' in data['Data']:
-                info_text = f"Points: {data['Data']['Point']}"
+            if 'data' in data and data['data'] and 'current_bonus' in data['data']:
+                info_text = f"Points: {data['data']['current_bonus']}"
             elif 'msg' in data:
                 info_text = data['msg']
             else:
@@ -184,7 +191,7 @@ class MainWindow(QMainWindow):
             return
         
         try:
-            token = self.get_token(index)
+            token = self.get_park_token(index)
             data = utils.query_park_fee(token, plate)
             ResultDialog("Parking Fee", data, self).exec_()
         except Exception as e:
@@ -192,7 +199,7 @@ class MainWindow(QMainWindow):
 
     def show_park_records(self, index):
         try:
-            token = self.get_token(index)
+            token = self.get_park_token(index)
             data = utils.get_park_records(token)
             ResultDialog("Parking Records", data, self).exec_()
         except Exception as e:
