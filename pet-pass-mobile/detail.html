@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <title>八喜详情</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body data-page="detail">
+    <main class="app-shell">
+      <section class="phone-screen detail-screen" aria-label="宠物详情页面">
+        <header class="nav-bar">
+          <div class="nav-left">
+            <a class="plain-link" href="./index.html" data-field="common.headerBack"></a>
+            <span data-field="common.headerClose"></span>
+          </div>
+          <h1 class="nav-title" data-field="common.headerTitle"></h1>
+        </header>
+
+        <section class="detail-card">
+          <div class="detail-hero">
+            <div class="detail-avatar">
+              <img src="./assets/paw-mark.svg" alt="" />
+            </div>
+
+            <div class="detail-hero-copy">
+              <div class="detail-name-line">
+                <span class="detail-name-text" data-field="detail.petName"></span>
+                <span class="detail-gender-text" data-field="detail.genderSymbol"></span>
+              </div>
+
+              <div class="detail-summary-line">
+                <span data-field="detail.summaryLeft"></span>
+                <span class="detail-divider">|</span>
+                <span data-field="detail.summaryRight"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-fields" data-detail-fields></div>
+        </section>
+      </section>
+    </main>
+    <script src="./content.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

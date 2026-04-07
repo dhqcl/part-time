@@ -1,0 +1,14 @@
+{
+  "name": "pet-pass-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "generate:qr": "node scripts/generate-qr.cjs",
+    "build": "npm run generate:qr",
+    "preview": "npm run build && python3 -m http.server 7180"
+  },
+  "dependencies": {
+    "jimp": "^1.6.0",
+    "qrcode": "^1.5.4"
+  }
+}

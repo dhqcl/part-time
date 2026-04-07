@@ -1,0 +1,8 @@
+services:
+  pet-pass-mobile:
+    build:
+      context: .
+    container_name: pet-pass-mobile
+    ports:
+      - "${HOST_PORT:-718}:80"
+    restart: unless-stopped

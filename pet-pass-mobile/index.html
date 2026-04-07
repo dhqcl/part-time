@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+    />
+    <title>文明养犬大一件事</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body data-page="home">
+    <main class="app-shell">
+      <section class="phone-screen home-screen" aria-label="宠物码页面">
+        <header class="nav-bar">
+          <div class="nav-left">
+            <span data-field="common.headerBack"></span>
+            <span data-field="common.headerClose"></span>
+          </div>
+          <h1 class="nav-title" data-field="common.headerTitle"></h1>
+        </header>
+
+        <section class="pet-card">
+          <div class="card-wave" aria-hidden="true"></div>
+          <div class="card-tab" data-field="home.petCodeLabel"></div>
+
+          <div class="pet-paw">
+            <img src="./assets/paw-mark.svg" alt="" />
+          </div>
+
+          <div class="pet-name" data-field="home.petName"></div>
+
+          <div class="pet-dates">
+            <div class="date-row">
+              <span data-field="home.vaccineLabel"></span>
+              <span data-field="home.vaccineDate"></span>
+            </div>
+            <div class="date-row">
+              <span data-field="home.registerLabel"></span>
+              <span data-field="home.registerDate"></span>
+            </div>
+          </div>
+
+          <div class="qr-wrap">
+            <img class="qr-image" src="./assets/qr-code.svg" alt="宠物二维码" />
+            <div class="qr-center-logo" aria-hidden="true">
+              <img src="./assets/ewtb-stacked.svg" alt="" />
+            </div>
+          </div>
+
+          <div class="qr-time" data-full-time></div>
+
+          <div class="notice-title" data-field="home.alertTitle"></div>
+          <div class="notice-description-row">
+            <span class="notice-icon" aria-hidden="true">!</span>
+            <div class="notice-description" data-field="home.alertDescription"></div>
+          </div>
+
+          <a class="primary-button" href="./detail.html" aria-label="查看详情">
+            <span data-field="home.detailButton"></span>
+          </a>
+        </section>
+      </section>
+    </main>
+    <script src="./content.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
